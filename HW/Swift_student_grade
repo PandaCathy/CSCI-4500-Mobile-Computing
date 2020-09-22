@@ -1,0 +1,164 @@
+// This is a swift program to print out student grade
+
+//structure Course
+struct Course {
+    let name:String         //Name of the course
+    let homework1:Double    //Grade of homework 1
+    let homework2:Double    //Grade of homework 2
+    let midterm:Double      //Grade of midterm exam
+    let final:Double        //Grade of final exam
+    
+    var FinalGrade:Double {     //Final grade
+        get{
+            //final grade is 20% of each homework, 30% of each exams
+            var finalgrade:Double = (homework1*0.2) + (homework2*0.2) + (midterm*0.3) + (final*0.3)
+            return finalgrade
+        }
+    }
+}
+
+//class Student
+class Student {
+    var name:String = ""            //Student's name
+    var courses:[Course] = []        //Student's courses
+    
+    var MaxGrade:Course? {          //The course in array courses which has the maximum Final Grade
+        get {
+            var index = 0
+            var currentMax = courses[0].FinalGrade
+             //Set the current max grade as the first course final grade
+            for i in 1..<courses.count{
+                //Comparing the final grade
+                //If other courses final grade is greater than the current max grade
+                if courses[i].FinalGrade > currentMax {
+                    //Update the new max grade
+                    currentMax = courses[i].FinalGrade
+                    //Get the index number of the new max
+                    index = i
+                }
+            }
+            return courses[index]
+            }
+    }
+    
+    var MinGrade:Course? {          //The course in array courses which has the minimum Final Grade
+        get {
+            var index = 0
+            //Set the current min grade as the first course final grade
+            var currentMin = courses[0].FinalGrade
+            for i in 1..<courses.count{
+                //Comparing the final grade
+                //If other courses final grade is less than the current min grade
+                if courses[i].FinalGrade < currentMin {
+                    //Update the new min grade
+                    currentMin = courses[i].FinalGrade
+                    //Get the index number of the new min
+                    index = i
+                }
+            }
+            return courses[index]
+        }
+    }
+    
+    var AvgGrade:Double? {          //Return the average final grade of all courses of one student
+        get {
+            var totalGrade:Double = 0
+            //Add all the total final grade
+            for i in 0..<courses.count{
+                totalGrade += courses[i].FinalGrade
+            }
+            //Total final grades divide the number of the courses
+            var result:Double = totalGrade/Double(courses.count)
+            return result
+        }
+    }
+    
+    //Bonus 1: Get the average final grade of a specific couse name of all students in array "s"
+    class func getStudentAvgFrom(students s:[Student], andCourse c:String) -> Double {
+        var index = 0
+        var courses:[Course] = []
+        var oneFinalgrade:Double = 0
+
+        //get the index number when the courese name are the same
+        for i in 0..<courses.count{
+            if courses[i].name == c{
+                index = i
+            }
+        }
+        //Add the total final grade
+        for j in 0..<s.count{
+            oneFinalgrade += s[j].courses[index].FinalGrade
+        }
+        //Total final grades divide the number of students
+        var result2:Double = oneFinalgrade/Double(s.count)
+        return result2
+    }
+
+    //Bonus 2: Get the average final grade of all couses of all students in array "s"
+    class func getStudentAvgFrom(students s:[Student]) -> Double {
+        var allGrades:Double = 0
+        //Add all the average grade from all students
+        for i in 0..<s.count{
+            allGrades += s[i].AvgGrade!
+        }
+        //Total avage grades divide the number of the students
+        var result1:Double = allGrades/Double(s.count)
+        return result1
+    }
+}
+
+//Don't change the following codes
+//A list of students
+var students:[Student] = []
+
+//Information of the first student
+var student1:Student = Student()
+student1.name = "Peter"
+student1.courses.append(Course(name: "Physics", homework1: 88, homework2: 77, midterm: 84, final: 83))
+student1.courses.append(Course(name: "Math", homework1: 92, homework2: 93, midterm: 90, final: 96))
+student1.courses.append(Course(name: "Mobile Computing", homework1: 96, homework2: 94, midterm: 93, final: 99))
+students.append(student1)   //Add one student to the list
+
+//Information of the second student
+var student2:Student = Student()
+student2.name = "Alice"
+student2.courses.append(Course(name: "Physics", homework1: 92, homework2: 86, midterm: 83, final: 93))
+student2.courses.append(Course(name: "Math", homework1: 91, homework2: 88, midterm: 87, final: 96))
+student2.courses.append(Course(name: "Mobile Computing", homework1: 91, homework2: 93, midterm: 88, final: 90))
+students.append(student2)
+
+//Information of the third student
+var student3:Student = Student()
+student3.name = "Bob"
+student3.courses.append(Course(name: "Physics", homework1: 66, homework2: 78, midterm: 75, final: 84))
+student3.courses.append(Course(name: "Math", homework1: 81, homework2: 82, midterm: 86, final: 88))
+student3.courses.append(Course(name: "Mobile Computing", homework1: 97, homework2: 96, midterm: 91, final: 99))
+students.append(student3)
+
+//Don't change the following codes
+print("Total: \(students.count) students")
+
+print("\(student1.name)'s Physics final grade is \(student1.courses[0].FinalGrade)")
+
+if student1.MaxGrade != nil {
+    print("\(student1.MaxGrade!.name) is the best couse of \(student1.name), and its grade is \(student1.MaxGrade!.FinalGrade)")
+} else {
+    print("Errors occured when getting \(student1.name)'s best course.")
+}
+
+if student1.MinGrade != nil {
+    print("\(student1.MinGrade!.name) is the worse couse of \(student1.name), and its grade is \(student1.MinGrade!.FinalGrade)")
+} else {
+    print("Errors occured when getting \(student1.name)'s worse course.")
+}
+
+if student1.AvgGrade != nil {
+    print("The average final grade of \(student1.name) is \(student1.AvgGrade!)")
+} else {
+    print("Errors occured when getting \(student1.name)'s average grade.")
+}
+
+
+
+print("Bonus 1: \n The average grade of Physics of all students is \(Student.getStudentAvgFrom(students: students, andCourse: "Physics"))")
+print("Bonus 2: \n The average grade all courses of all students is \(Student.getStudentAvgFrom(students: students))")
